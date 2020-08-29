@@ -1,10 +1,6 @@
 import Foundation
 import HandyOperators
 
-public protocol AnyHTMLElement {
-	func encode(indent: String) -> String
-}
-
 @dynamicMemberLookup
 public struct HTMLElement<T>: AnyHTMLElement where T: HTMLElementType {
 	private var type: T
@@ -68,6 +64,12 @@ public struct HTMLElement<T>: AnyHTMLElement where T: HTMLElementType {
 			return indent + "<\(tagContents) />\n"
 		}
 	}
+}
+
+public typealias HTMLContent = [AnyHTMLElement]
+
+public protocol AnyHTMLElement {
+	func encode(indent: String) -> String
 }
 
 func attributes(in object: Any) -> [String] {

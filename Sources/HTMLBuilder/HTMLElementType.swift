@@ -6,7 +6,7 @@ public protocol HTMLElementType {
 	var tagID: String { get }
 	
 	var content: Content { get }
-	var htmlContent: [AnyHTMLElement]? { get }
+	var htmlContent: HTMLContent? { get }
 }
 
 public extension HTMLElementType where Content == Never {
@@ -14,23 +14,23 @@ public extension HTMLElementType where Content == Never {
 		fatalError("\(tagID) element has no content!")
 	}
 	
-	var htmlContent: [AnyHTMLElement]? { nil }
+	var htmlContent: HTMLContent? { nil }
 }
 
 public extension HTMLElementType where Content: Collection, Content.Element: AnyHTMLElement {
-	var htmlContent: [AnyHTMLElement]? {
+	var htmlContent: HTMLContent? {
 		content.map { $0 }
 	}
 }
 
 public extension HTMLElementType where Content: Collection, Content.Element == AnyHTMLElement {
-	var htmlContent: [AnyHTMLElement]? {
+	var htmlContent: HTMLContent? {
 		Array(content)
 	}
 }
 
 public extension HTMLElementType where Content: AnyHTMLElement {
-	var htmlContent: [AnyHTMLElement]? {
+	var htmlContent: HTMLContent? {
 		[content]
 	}
 }

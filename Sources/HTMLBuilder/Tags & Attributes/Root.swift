@@ -10,7 +10,7 @@ extension HTML {
 		public var header: HTMLElement<Header>
 		public var body: HTMLElement<Body>
 		
-		public var content: [AnyHTMLElement] {
+		public var content: HTMLContent {
 			[header, body]
 		}
 	}

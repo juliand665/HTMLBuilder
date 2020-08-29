@@ -12,7 +12,7 @@ extension HTML {
 		
 		public var content: [HTMLMetadataContent] = []
 		
-		public var htmlContent: [AnyHTMLElement]? {
+		public var htmlContent: HTMLContent? {
 			content.map { $0 }
 		}
 	}

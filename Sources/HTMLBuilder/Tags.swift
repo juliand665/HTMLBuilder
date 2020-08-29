@@ -7,11 +7,11 @@ public extension HTML {
 	struct Body: HTMLElementType {
 		public let tagID = "body"
 		
-		public var content: [AnyHTMLElement] = []
+		public var content: HTMLContent
 	}
 	
-	static func body() -> HTMLElement<Body> {
-		Body()
+	static func body(@HTMLBuilder content: () -> HTMLContent) -> HTMLElement<Body> {
+		Body(content: content())
 			.wrapped()
 	}
 	
@@ -19,11 +19,23 @@ public extension HTML {
 	struct Paragraph: HTMLElementType {
 		public let tagID = "p"
 		
-		public var content: [AnyHTMLElement] = []
+		public var content: HTMLContent
 	}
 	
-	static func paragraph() -> HTMLElement<Paragraph> {
-		Paragraph()
+	static func paragraph(@HTMLBuilder content: () -> HTMLContent) -> HTMLElement<Paragraph> {
+		Paragraph(content: content())
+			.wrapped()
+	}
+	
+	/// `<div>`
+	struct Division: HTMLElementType {
+		public let tagID = "div"
+		
+		public var content: HTMLContent
+	}
+	
+	static func division(@HTMLBuilder content: () -> HTMLContent) -> HTMLElement<Division> {
+		Division(content: content())
 			.wrapped()
 	}
 	
@@ -32,10 +44,16 @@ public extension HTML {
 		public let tagID = "a"
 		
 		public var reference: HTMLAttribute<String>
+		
+		public var content: HTMLContent
 	}
 	
 	static func anchor(to reference: String) -> HTMLElement<Anchor> {
-		Anchor(reference: .init("href", value: reference))
+		anchor(to: reference) {}
+	}
+	
+	static func anchor(to reference: String, @HTMLBuilder content: () -> HTMLContent) -> HTMLElement<Anchor> {
+		Anchor(reference: .init("href", value: reference), content: content())
 			.wrapped()
 	}
 }

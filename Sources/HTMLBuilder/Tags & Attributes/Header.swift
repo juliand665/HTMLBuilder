@@ -9,7 +9,7 @@ extension HTML {
 		public var baseURL: HTMLElement<BaseURL>?
 		public var metadata: [HTMLMetadataContent] = []
 		
-		public var content: [AnyHTMLElement] {
+		public var content: HTMLContent {
 			[title] + baseURL.asArray + metadata
 		}
 	}

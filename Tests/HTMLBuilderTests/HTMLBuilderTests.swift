@@ -12,15 +12,15 @@ final class HTMLBuilderTests: XCTestCase {
 				.encode()
 		)
 		print(
-			HTML.body()
-				.content([
-					#"hello! i have "quotes", &ampersands, < less thans, & \ some \back\\slashes too"#,
-					HTML.paragraph()
-						.content(["and i can contain <p>aragraphs too! nice, huh?"])
-				])
-				.hidden(false)
-				.title(#"weird title with "quotes", &ampersands, < less thans, & \ some \back\\slashes"#)
-				.encode()
+			HTML.body {
+				#"hello! i have "quotes", &ampersands, < less thans, & \ some \back\\slashes too"#
+				HTML.paragraph {
+					"and i can contain <p>aragraphs too! nice, huh?"
+				}
+			}
+			.hidden(false)
+			.title(#"weird title with "quotes", &ampersands, < less thans, & \ some \back\\slashes"#)
+			.encode()
 		)
 	}
 	
