@@ -5,7 +5,7 @@ final class HTMLBuilderTests: XCTestCase {
 	func testExample() {
 		print(
 			HTML.image(source: "www.example.com")
-				.alt("cool")
+				.textAlternative("cool")
 				.hidden(true)
 				.width(420)
 				.title(#"weird title with "quotes", &ampersands, < less thans, & \ some \back\\slashes"#)

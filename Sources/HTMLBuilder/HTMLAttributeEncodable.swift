@@ -35,8 +35,12 @@ extension UInt64: HTMLAttributeEncodable {}
 
 extension Double: HTMLAttributeEncodable {}
 extension Float: HTMLAttributeEncodable {}
-extension Float80: HTMLAttributeEncodable {}
-extension CGFloat: HTMLAttributeEncodable {}
+
+extension Character: HTMLAttributeEncodable {
+	public func asHTMLAttribute() -> String? {
+		String(self)
+	}
+}
 
 extension Optional: HTMLAttributeEncodable where Wrapped: HTMLAttributeEncodable {
 	public func asHTMLAttribute() -> String? {
@@ -46,15 +50,25 @@ extension Optional: HTMLAttributeEncodable where Wrapped: HTMLAttributeEncodable
 
 extension Array: HTMLAttributeEncodable where Element: HTMLAttributeEncodable {
 	public func asHTMLAttribute() -> String? {
+		asHTMLAttribute(separator: " ")
+	}
+	
+	public func asHTMLAttribute(separator: String) -> String? {
 		self.compactMap { $0.asHTMLAttribute() }
 			.nonEmptyOptional?
-			.joined(separator: " ")
+			.joined(separator: separator)
 	}
 }
 
 extension Bool: HTMLAttributeEncodable {
 	public func asHTMLAttribute() -> String? {
 		self ? "" : nil // god html is weird
+	}
+}
+
+extension HTMLAttributeEncodable where Self: RawRepresentable, RawValue: HTMLAttributeEncodable {
+	public func asHTMLAttribute() -> String? {
+		rawValue.asHTMLAttribute()
 	}
 }
 

@@ -1,32 +1,40 @@
 import Foundation
 
 public struct HTMLAttribute<Value>: AnyHTMLAttribute where Value: HTMLAttributeEncodable {
-	let keyOverride: String?
+	public let key: String
 	public var value: Value
 	
-	init(key keyOverride: String? = nil, value: Value) {
-		self.keyOverride = keyOverride
+	init(_ key: String, value: Value) {
+		self.key = key
 		self.value = value
 	}
 	
-	init<V>(key keyOverride: String? = nil, value: Value = nil) where Value == V? {
-		self.init(key: keyOverride, value: value)
-	}
-	
-	init(_ value: Value) {
-		self.init(value: value)
-	}
-	
-	func encode(suggestedKey: String) -> String? {
+	func encode() -> String? {
 		guard let value = value.asHTMLAttribute() else { return nil }
 		
 		let escaped = value
 			.withHTMLEscapes()
 			.replacingOccurrences(of: "\"", with: "&quot;")
-		return "\(keyOverride ?? suggestedKey)=\"\(escaped)\""
+		return "\(key.lowercased())=\"\(escaped)\""
+	}
+}
+
+extension HTMLAttribute where Value == Bool {
+	init(_ key: String) {
+		self.init(key, value: false)
+	}
+}
+
+extension HTMLAttribute {
+	init<V>(_ key: String) where Value == V? {
+		self.init(key, value: nil)
+	}
+	
+	init<V>(_ key: String) where Value == [V] {
+		self.init(key, value: [])
 	}
 }
 
 protocol AnyHTMLAttribute {
-	func encode(suggestedKey: String) -> String?
+	func encode() -> String?
 }

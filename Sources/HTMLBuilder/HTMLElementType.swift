@@ -9,7 +9,7 @@ public protocol HTMLElementType {
 	var htmlContent: [AnyHTMLElement]? { get }
 }
 
-extension HTMLElementType where Content == Never {
+public extension HTMLElementType where Content == Never {
 	var content: Never {
 		fatalError("\(tagID) element has no content!")
 	}
@@ -17,14 +17,26 @@ extension HTMLElementType where Content == Never {
 	var htmlContent: [AnyHTMLElement]? { nil }
 }
 
-extension HTMLElementType where Content: Collection, Content.Element: AnyHTMLElement {
+public extension HTMLElementType where Content: Collection, Content.Element: AnyHTMLElement {
 	var htmlContent: [AnyHTMLElement]? {
 		content.map { $0 }
 	}
 }
 
-extension HTMLElementType where Content: Collection, Content.Element == AnyHTMLElement {
+public extension HTMLElementType where Content: Collection, Content.Element == AnyHTMLElement {
 	var htmlContent: [AnyHTMLElement]? {
 		Array(content)
+	}
+}
+
+public extension HTMLElementType where Content: AnyHTMLElement {
+	var htmlContent: [AnyHTMLElement]? {
+		[content]
+	}
+}
+
+extension HTMLElementType {
+	func wrapped() -> HTMLElement<Self> {
+		HTMLElement(self)
 	}
 }

@@ -17,29 +17,33 @@ public struct HTMLElement<T>: AnyHTMLElement where T: HTMLElementType {
 	public subscript<Value>(
 		dynamicMember keyPath: WritableKeyPath<T, Value>
 	) -> (Value) -> Self {
-		return { newValue in
-			self <- {
-				$0.type[keyPath: keyPath] = newValue
-			}
+		mutator { copy, newValue in
+			copy.type[keyPath: keyPath] = newValue
 		}
 	}
 	
 	public subscript<Value>(
 		dynamicMember keyPath: WritableKeyPath<T, HTMLAttribute<Value>>
 	) -> (Value) -> Self {
-		return { newValue in
-			self <- {
-				$0.type[keyPath: keyPath].value = newValue
-			}
+		mutator { copy, newValue in
+			copy.type[keyPath: keyPath].value = newValue
 		}
 	}
 	
 	public subscript<Value>(
 		dynamicMember keyPath: WritableKeyPath<GlobalAttributes, HTMLAttribute<Value>>
 	) -> (Value) -> Self {
+		mutator { copy, newValue in
+			copy.globalAttributes[keyPath: keyPath].value = newValue
+		}
+	}
+	
+	private func mutator<Value>(
+		using setter: @escaping (inout Self, Value) -> Void
+	) -> (Value) -> Self {
 		return { newValue in
 			self <- {
-				$0.globalAttributes[keyPath: keyPath].value = newValue
+				setter(&$0, newValue)
 			}
 		}
 	}
@@ -67,10 +71,8 @@ public struct HTMLElement<T>: AnyHTMLElement where T: HTMLElementType {
 }
 
 func attributes(in object: Any) -> [String] {
-	Mirror(reflecting: object).children.compactMap { (label, value) in
-		label.flatMap { label in
-			(value as? AnyHTMLAttribute)?.encode(suggestedKey: label)
-		}
+	Mirror(reflecting: object).children.compactMap { (_, value) in
+		(value as? AnyHTMLAttribute)?.encode()
 	}
 }
 
@@ -89,5 +91,11 @@ extension String {
 		self
 			.replacingOccurrences(of: "&", with: "&amp;")
 			.replacingOccurrences(of: "<", with: "&lt;")
+	}
+}
+
+extension Optional {
+	var asArray: [Wrapped] {
+		self.map { [$0] } ?? []
 	}
 }
